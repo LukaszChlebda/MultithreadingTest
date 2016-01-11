@@ -6,7 +6,15 @@ public class SynchronizedTutor {
     static StringBuffer buf = new StringBuffer();
     Integer counter = 0;
 
-    public synchronized void increment() {
+    Object monitor = new Object();
+
+    public void increment() {
+        synchronized (this) {
+            counter++;
+        }
+    }
+
+    public synchronized void increment2() {
         counter++;
     }
 
@@ -24,8 +32,12 @@ public class SynchronizedTutor {
         @Override
         public void run() {
             for (int i=0;i<1000;i++) {
-                increment();
-                log(threadName+":"+i+":"+counter);
+                //increment();
+                synchronized (monitor) {
+                    counter++;
+                    log(threadName+":"+i+":"+counter);
+                }
+
             }
         }
     }

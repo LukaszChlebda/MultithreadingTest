@@ -15,7 +15,6 @@ public class PipedReaderWriterTutor {
             try {
                 out.write(TEST_LINE);
                 out.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,8 +43,15 @@ public class PipedReaderWriterTutor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new Thread(new PipeWriterThread()).start();
-        new Thread(new PipeReaderThread()).start();
+
+        Thread t1 = new Thread(new PipeWriterThread());
+        Thread t2 = new Thread(new PipeReaderThread());
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
 
         assertEquals(TEST_LINE, pipeReaderResult);
     }
